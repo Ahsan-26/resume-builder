@@ -1,12 +1,21 @@
+import Link from 'next/link'
 import { useTranslations } from 'next-intl';
 
-export default function HomePage() {
+export default function Home() {
   const t = useTranslations('home');
-
+  
   return (
-    <main className="p-8">
-      <h1 className="text-3xl font-bold">{t('title')}</h1>
-      <p className="mt-2 text-gray-600">{t('description')}</p>
-    </main>
+    <div className="container">
+      <h1>{t('header')}</h1>
+      <p>This is a multilingual Next.js site using next-intl.</p>
+      <div className="links">
+        <Link href="/about" className="link">
+          Learn About Us
+        </Link>
+        <Link href="/contact" className="link">
+          Contact Us
+        </Link>
+      </div>
+    </div>
   );
 }

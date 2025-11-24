@@ -1,21 +1,15 @@
 import {getRequestConfig} from 'next-intl/server';
-import {locales, defaultLocale, type Locale} from '@/i18n/locales';
-
-// Type guard so TS stops panicking
-function isLocale(value: string): value is Locale {
-  return locales.includes(value as Locale);
-}
-
-export default getRequestConfig(async ({locale}) => {
-  const rawLocale = locale ?? defaultLocale;
-
-  // Validate + narrow locale type
-  const activeLocale = isLocale(rawLocale) ? rawLocale : defaultLocale;
-
-  const messages = (await import(`../../messages/${activeLocale}.json`)).default;
+import {hasLocale} from 'next-intl';
+import {routing} from './routing';
+ 
+export default getRequestConfig(async ({requestLocale}) => {
+  const requested = await requestLocale;
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
 
   return {
-    locale: activeLocale,
-    messages
+    locale,
+    messages: (await import(`../../locales/${locale}/default.json`)).default
   };
 });
